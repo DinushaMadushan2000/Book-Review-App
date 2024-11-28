@@ -30,13 +30,7 @@ function BookDetail() {
       <p>{book.author}</p>
       <p>{book.ISBN}</p>
 
-      <h3>Reviews</h3>
-      <ul>
-        {reviews.map((review, index) => (
-          <li key={index}>{review.review_text}</li>
-        ))}
-      </ul>
-
+      
       <ReviewForm bookId={id} />
     </div>
   );

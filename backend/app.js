@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
-import { connectDB } from "./config/connection.js"; // Ensure correct path to connection.js
 import cors from "cors";
+import { connectDB } from "./config/connection.js";
 
 // Import routes
 import authRoutes from "./routes/auth.js";
@@ -12,9 +12,9 @@ import notFoundHandler from "./middleware/not-found.js";
 dotenv.config();
 
 const app = express();
-app.use(cors());
 
 // Middleware
+app.use(cors());
 app.use(express.json());
 
 // Routes
@@ -27,7 +27,7 @@ app.use(baseURL, reviewRoutes);
 app.use(notFoundHandler);
 
 // Connect to the database and start the server
-connectDB();  // Ensure the connection function is called
+connectDB();
 
 const port = process.env.PORT || 5001;
 app.listen(port, () => {
