@@ -1,7 +1,7 @@
 import Express from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./config/connection.js";
-import cors from "cors"
+import cors from "cors";
 
 // models
 import user from "./models/user.js";
@@ -33,7 +33,7 @@ app.use(notFoundHandler)
 connectDB();
 
 try {
-    const port = process.env.PORT;
+    const port = process.env.PORT || 5001;
     app.listen(port, console.log(`Server running on port ${port}!`));
 } catch (error) {
     console.log(error);
