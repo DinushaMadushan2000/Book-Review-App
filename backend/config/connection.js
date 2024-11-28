@@ -9,13 +9,21 @@ export const sequelize = new Sequelize(
     process.env.DATABASE_PASSWORD,
     {
         host: process.env.DATABASE_HOST,
-        dialect: 'mysql'
-    });
+        dialect: "mysql",
+    }
+);
+
 export async function connectDB() {
     try {
-        // const connectedDataBase = await sequelize.sync();
-        console.log("Connected Database!");
+        // Test the database connection
+        await sequelize.authenticate();
+        console.log("Connected to the database successfully!");
+
+        // Sync models (optional)
+        await sequelize.sync({ alter: true });
+        console.log("Database tables synced successfully!");
     } catch (error) {
-        console.log("Failed connecting to database", { message: error.message });
+        console.log("Failed to connect to the database:", error.message);
+        process.exit(1); // Exit if connection fails
     }
 }

@@ -1,40 +1,35 @@
-import Express from "express";
+import express from "express";
 import dotenv from "dotenv";
-import { connectDB } from "./config/connection.js";
+import { connectDB } from "./config/connection.js"; // Ensure correct path to connection.js
 import cors from "cors";
 
-// models
-import user from "./models/user.js";
-import book from "./models/book.js";
-import review from "./models/review.js";
-
-// routes
-import bookRoutes from "./routes/book.js";
+// Import routes
 import authRoutes from "./routes/auth.js";
+import bookRoutes from "./routes/book.js";
 import reviewRoutes from "./routes/review.js";
 import notFoundHandler from "./middleware/not-found.js";
 
 dotenv.config();
 
-const app = Express();
+const app = express();
 app.use(cors());
-// middleware
-app.use(Express.json());
 
-// routes
+// Middleware
+app.use(express.json());
+
+// Routes
 const baseURL = "/api/v1";
 app.use(baseURL, authRoutes);
 app.use(baseURL, bookRoutes);
 app.use(baseURL, reviewRoutes);
 
-// error handlers
-app.use(notFoundHandler)
+// Error handler
+app.use(notFoundHandler);
 
-connectDB();
+// Connect to the database and start the server
+connectDB();  // Ensure the connection function is called
 
-try {
-    const port = process.env.PORT || 5001;
-    app.listen(port, console.log(`Server running on port ${port}!`));
-} catch (error) {
-    console.log(error);
-}
+const port = process.env.PORT || 5001;
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
