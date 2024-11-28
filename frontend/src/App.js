@@ -6,12 +6,17 @@ import BookList from "./components/BookList";
 import BookDetail from "./components/BookDetail";
 import ReviewForm from "./components/ReviewForm";  
 import ProtectedRoute from "./components/ProtectedRoute"; 
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <h1>Book Review Application</h1>
+        
+        <div className="container text-center my-5">
+          <h1>Book Review Application</h1>
+        </div>
+
         <Routes>
           <Route path="/" element={<BookList />} />
           <Route path="/login" element={<Login />} />

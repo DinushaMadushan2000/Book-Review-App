@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function ReviewForm({ bookId }) {
   const [reviewText, setReviewText] = useState("");
-  const [reviews, setReviews] = useState([]);  // Initialize reviews with an empty array
+  const [reviews, setReviews] = useState([]);  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,7 +15,7 @@ function ReviewForm({ bookId }) {
       return;
     }
 
-    // Fetch reviews for the current book
+    
     axios
       .get(`http://localhost:5001/api/v1/books/${bookId}/reviews`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -23,39 +24,38 @@ function ReviewForm({ bookId }) {
         if (response.data && Array.isArray(response.data.bookReview)) {
           setReviews(response.data.bookReview);
         } else {
-          setReviews([]);  // Set reviews to empty if no reviews are found
+          setReviews([]);  
         }
       })
       .catch((error) => {
         console.error("Error fetching reviews:", error);
         alert("Failed to fetch reviews.");
-        setReviews([]);  // Set reviews to empty if there is an error
+        setReviews([]); 
       });
   }, [bookId, navigate]);
 
   const handleReviewSubmit = async (e) => {
-    e.preventDefault();  // Prevent default form submission
+    e.preventDefault();  
     const token = localStorage.getItem("token");
     if (!token) return alert("You need to be logged in!");
 
     try {
       await axios.put(
-        `http://localhost:5001/api/v1/books/${bookId}/reviews`,  // PUT request to add/update review
-        { review_text: reviewText },  // Send the review text in the body
+        { review_text: reviewText },  
         {
-          headers: { Authorization: `Bearer ${token}` },  // Attach the JWT token for authentication
+          headers: { Authorization: `Bearer ${token}` },  
         }
       );
       alert("Review added/updated successfully!");
 
-      // Refresh reviews after adding/updating a review
+      
       axios
         .get(`http://localhost:5001/api/v1/books/${bookId}/reviews`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
           if (response.data && Array.isArray(response.data.bookReview)) {
-            setReviews(response.data.bookReview);  // Update reviews state
+            setReviews(response.data.bookReview);  
           }
         });
     } catch (error) {
@@ -64,20 +64,20 @@ function ReviewForm({ bookId }) {
     }
   };
 
-  // Handle deleting a review
+  
   const handleReviewDelete = async (reviewId) => {
     const token = localStorage.getItem("token");
     if (!token) return alert("You need to be logged in!");
 
     try {
       await axios.delete(
-        `http://localhost:5001/api/v1/books/${bookId}/reviews/${reviewId}`,  // DELETE request to remove review
+        `http://localhost:5001/api/v1/books/${bookId}/reviews/${reviewId}`,  
         {
-          headers: { Authorization: `Bearer ${token}` },  // Attach the JWT token for authentication
+          headers: { Authorization: `Bearer ${token}` },  
         }
       );
 
-      // Remove the deleted review from the state
+      
       setReviews((prevReviews) => prevReviews.filter((review) => review.id !== reviewId));
       alert("Review deleted successfully!");
     } catch (error) {
@@ -87,33 +87,48 @@ function ReviewForm({ bookId }) {
   };
   
   return (
-    <div>
-      <form onSubmit={handleReviewSubmit}>
-        <textarea
-          value={reviewText}
-          onChange={(e) => setReviewText(e.target.value)}
-          placeholder="Write your review here"
-        />
-        <button type="submit">Submit Review</button>
-      </form>
+    <div className="container mt-5">
+      
+      <div className="card mb-4">
+        <div className="card-header">
+          <h3>Write a Review</h3>
+        </div>
+        <div className="card-body">
+          <form onSubmit={handleReviewSubmit}>
+            <div className="mb-3">
+              <label htmlFor="reviewText" className="form-label">Your Review</label>
+              <textarea
+                id="reviewText"
+                className="form-control"
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                placeholder="Write your review here"
+                required
+              />
+            </div>
+            <button type="submit" className="btn btn-primary w-100">Submit Review</button>
+          </form>
+        </div>
+      </div>
 
+      
       <h3>Existing Reviews</h3>
       {reviews && reviews.length > 0 ? (
-        <ul>
-          {/* Safely map over reviews */}
+        <div className="list-group">
           {reviews.map((review) => (
-            <li key={review.id}>
-              <p>
-                {review.review_text} - <b>{review.User?.username}</b>
-              </p>
-              <button onClick={() => handleReviewDelete(review.id)}>
+            <div key={review.id} className="list-group-item">
+              <p><strong>{review.User?.username}</strong>: {review.review_text}</p>
+              <button
+                onClick={() => handleReviewDelete(review.id)}
+                className="btn btn-danger btn-sm"
+              >
                 Delete Review
               </button>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       ) : (
-        <p>No reviews yet for this book.</p>
+        <div className="alert alert-info">No reviews yet for this book.</div>
       )}
     </div>
   );

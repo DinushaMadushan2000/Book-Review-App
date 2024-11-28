@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; 
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Register() {
   const [username, setUsername] = useState("");
@@ -14,28 +15,56 @@ function Register() {
         username,
         password,
       });
-      navigate("/login");
+      navigate("/login");  
     } catch (error) {
       console.error("Error registering", error);
     }
   };
 
   return (
-    <form onSubmit={handleRegister}>
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button type="submit">Register</button>
-    </form>
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-header text-center">
+              <h3>Register</h3>
+            </div>
+            <div className="card-body">
+              <form onSubmit={handleRegister}>
+                <div className="mb-3">
+                  <label htmlFor="username" className="form-label">Username</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="username"
+                    placeholder="Enter your username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="password" className="form-label">Password</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <button type="submit" className="btn btn-primary w-100">Register</button>
+              </form>
+            </div>
+            <div className="card-footer text-center">
+              <p>Already have an account? <a href="/login">Login here</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
